@@ -1,10 +1,13 @@
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.*;
 
 public class Front extends JFrame {
+
+    Arvore arvore = new Arvore();
 
     JTextField text1 = new JTextField();
     JTextField text2 = new JTextField();
@@ -19,7 +22,7 @@ public class Front extends JFrame {
 
     JLabel label1 = new JLabel("Domínio: ");
     JLabel label2 = new JLabel("IP: ");
-    JLabel label3 = new JLabel("Consultar: ");
+    JLabel label3 = new JLabel("Consultar");
     JLabel label4 = new JLabel("Domínio: ");
     JLabel label5 = new JLabel("IP: ");
 
@@ -28,9 +31,9 @@ public class Front extends JFrame {
         setTitle("ifDNS");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setSize(470, 400);
+        setSize(485, 404);
         setLayout(null);
-        setResizable(false);
+        setResizable(true);
 
         label1.setBounds(5, 5, 150, 30);
         add(label1);
@@ -74,6 +77,8 @@ public class Front extends JFrame {
         text5.setBounds(5, 325, 460, 35);
         add(text5);
 
+        text4.setEnabled(false);
+
         remover.addActionListener(new Handler());
         cadastrar.addActionListener(new Handler());
         consultar.addActionListener(new Handler());
@@ -87,16 +92,74 @@ public class Front extends JFrame {
         @Override
         public void actionPerformed(ActionEvent ev) {
             if(ev.getSource() == remover) {
+                String dominio = text1.getText();
+
+                if(dominio.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um domínio.");
+                    text1.requestFocus();
+                    return;
+                }
+
+                try {
+
+                    arvore.remove(dominio);
+                    JOptionPane.showMessageDialog(null, "Domínio '" + dominio + "' removido com sucesso!");
+                    text1.setText("");
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
 
             }
             if(ev.getSource() == cadastrar) {
-                
+                String dominio = text1.getText();
+                String ip = text2.getText();
+
+                if(dominio.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um domínio.");
+                    text1.requestFocus();
+                    return;
+                }
+                if(ip.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um IP.");
+                    text2.requestFocus();
+                    return;
+                }
+
+                try {
+                    arvore.add(dominio, ip);
+                    JOptionPane.showMessageDialog(null, "Domínio '" + dominio + "' adicionado com sucesso!");
+                    text1.setText("");
+                    text2.setText("");
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    return;
+                }
             }
             if(ev.getSource() == consultar) {
-                
+                String dominio = text3.getText();
+
+                if(dominio.equals("")) {
+                    JOptionPane.showMessageDialog(null, "Digite um domínio.");
+                    text3.requestFocus();
+                    return;
+                }
+
+                try {
+                    String ip = arvore.search(dominio);
+                    text4.setText(ip);
+
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    text3.setText("");
+                    return;
+                }
+
             }
             if(ev.getSource() == ver) {
-                
+                text5.setText(arvore.getRoot().print());
             }
         }
     }

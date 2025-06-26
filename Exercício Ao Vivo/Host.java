@@ -8,7 +8,7 @@ public class Host {
     public Host(String dominio, String ip) {
         this.dominio = dominio;
         this.ip = ip;
-        this.filhos = null;
+        this.filhos = new ArrayList<Host>();
     }
 
     public Host(String dominio) {
@@ -18,28 +18,20 @@ public class Host {
     }
 
     public Host addFolha(String dominio, String ip) {
+        if(containsDominio(dominio)) {
+            return null;
+        }
         Host tmp = new Host(dominio, ip);
-        ArrayList<Host> array = this.filhos;
-
-        for(Host aux : array)
-            if(aux.dominio.equals(dominio))
-                return null;
-
         this.filhos.add(tmp);
-
         return tmp;
     }
 
     public Host add(String dominio) {
+        if(containsDominio(dominio)) {
+            return null;
+        }
         Host tmp = new Host(dominio);
-        ArrayList<Host> array = this.filhos;
-
-        for(Host aux : array)
-            if(aux.dominio.equals(dominio))
-                return null;
-
         this.filhos.add(tmp);
-
         return tmp;
     }
     
@@ -85,17 +77,17 @@ public class Host {
         return false;
     }
 
-    public void print() {
-        if(this.filhos == null) {
-            System.out.print(this.dominio);
-            System.out.print("()");
-            return;
+    public String print() {
+        String result = this.dominio;
+
+        if (this.filhos == null || this.filhos.isEmpty())
+            result += "()";
+        else {
+            result += "(";
+            for (Host tmp : this.filhos)
+                result += tmp.print();
+            result += ")";
         }
-        System.out.print(this.dominio);
-        System.out.print("(");
-        for(Host tmp : this.filhos) {
-            tmp.print();
-        }
-        System.out.print(")");
+        return result;
     }
 }

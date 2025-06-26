@@ -11,7 +11,7 @@ public class Arvore {
                 if(!aux.containsDominio(tmp[i]))
                     aux.add(tmp[i]);
                 else
-                    System.out.println("");
+                    System.out.print("");
                 
                 aux = aux.getFilho(tmp[i]);
             } else {
@@ -34,8 +34,6 @@ public class Arvore {
             String tmp[] = texto.split("\\.");
             Host aux = root;
     
-            System.out.println("Remove");
-    
             for(int i = tmp.length - 1; i >= 0; --i) {
                 if(i != 0) {
                     if(!aux.containsDominio(tmp[i]))
@@ -44,7 +42,6 @@ public class Arvore {
                         aux = aux.getFilho(tmp[i]);
                 } else {
                     Host temp = aux.remove(tmp[0]);
-                    System.out.println(tmp[0]);
                     if(temp == null)
                         throw new Exception("Domínio não encontrado.");
                     else {
@@ -72,9 +69,13 @@ public class Arvore {
                     else
                         aux = aux.getFilho(tmp[i]);
                 } else {
-                    if(!aux.containsDominio(tmp[0])) {
-
-                    }
+                    aux = aux.getFilho(tmp[0]);
+                    if(aux == null)
+                        throw new Exception("Domínio não encontrado.");
+                    else if(aux.ip == null)
+                        throw new Exception("Não há IP associado a este domínio.");
+                    else
+                        return aux.ip;
                 }
             }
     
@@ -82,8 +83,8 @@ public class Arvore {
         }
     }
 
-    public void print(Host no) {
-        no.print();
+    public String print() {
+        return root.print();
     }
 
     public Host getRoot() {
